@@ -117,16 +117,17 @@ function consumeItemsShaped(items, prod, stacks, delay) --In order
 	for key,item in pairs(items) do
 		local stack=stacks[key+self.input[1]-1]
 		if stack==nil then	return false	end
-		if not(item["name"]==stack["name"] and item["count"]<=stack["count"]) then
+		if not(item.name==stack.name and item.count<=stack.count) then
 			return false
 		end
 	end
 	for _,item in pairs(items) do
-		Zcontainer.consumeAt(item, self.input)
+		if item.consume~=false then
+			Zcontainer.consumeAt(item, self.input)
+		end
 	end
 	prod=Zcontainer.treasure(prod)
-	if not(delay==nil or delay==0) then
-		storage.wait=(storage.clock+delay)%self.clockMax
+	if delayKey(delay) then
 		return prod
 	end
 	return Zcontainer.addItems(prod)
@@ -147,20 +148,41 @@ function consumeItems(items, prod, stack, delay) --No order
 		::skip::
 	end
 	for _,item in pairs(items) do
-		Zcontainer.consumeAt(item, self.input)
+		if item.consume~=false then
+			Zcontainer.consumeAt(item, self.input)
+		end
 	end
 	prod=Zcontainer.treasure(prod)
-	if not(delay==nil or delay==0) then
-		storage.wait=(storage.clock+delay)%self.clockMax
+	if delayKey(delay) then
 		return prod
 	end
 	return Zcontainer.addItems(prod)
 end
 
+function delayKey(delay)
+	if not(delay==nil or delay==0) then
+		storage.wait=(storage.clock+delay)%self.clockMax
+		return true
+	end
+	return false
+end
+
 function die()
 	local drop=config.getParameter("multicraftAPI.drop", "all")
 	local poz=entity.position()
-	if drop=="all" then
+	if drop=="none" or drop==0 then
+		return
+	elseif type(drop)=="number" then
+		if drop>0 then
+			for _,item in pairs(storage.overflow) do
+				world.spawnItem(item.name, poz, math.ceil(item.count*drop))
+			end
+		else
+			for _,item in pairs(storage.overflow) do
+				world.spawnItem(item.name, poz, math.floor(item.count*-drop))
+			end
+		end
+	else
 		for _,item in pairs(storage.overflow) do
 			world.spawnItem(item.name, poz, item.count)
 		end

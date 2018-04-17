@@ -9,8 +9,7 @@ function Zcontainer.tryAdd(items)
 	end
 end
 
-function Zcontainer.addItems(pass)
-	item=Zutil.deepcopy(pass)
+function Zcontainer.addItems(items)
 	local id=entity.id()
 	local arr={}
 	for _,item in pairs(items) do
@@ -20,8 +19,7 @@ function Zcontainer.addItems(pass)
 	return arr
 end
 
-function Zcontainer.treasure(pass)
-	local items=Zutil.deepcopy(pass)
+function Zcontainer.treasure(items)
 	for key,item in pairs(items) do
 		if item.pool~=nil then
 			local pool=root.createTreasure(item.pool, item.level or 0)
@@ -35,8 +33,7 @@ function Zcontainer.treasure(pass)
 	return items
 end
 
-function Zcontainer.consumeAt(pass, range)
-	item=Zutil.deepcopy(pass)
+function Zcontainer.consumeAt(item, range)
 	local stack=world.containerItems(entity.id())
 	for offset=range[1],range[2] do
 		if stack[offset]~=nil and stack[offset]["name"]==item.name then
@@ -51,8 +48,7 @@ function Zcontainer.consumeAt(pass, range)
 	return false
 end
 
-function Zcontainer.putAt(pass, range)
-	item=Zutil.deepcopy(pass)
+function Zcontainer.putAt(item, range)
 	local stack=world.containerItems(entity.id())
 	for offset=range[1],range[2] do
 		if stack[offset]==nil or stack[offset]["name"]==item.name then
@@ -65,7 +61,7 @@ function Zcontainer.putAt(pass, range)
 	return item
 end
 
-function Zcontainer.canFitAt(pass, range)
+--[[function Zcontainer.canFitAt(pass, range)
 	item=Zutil.deepcopy(pass)
 	local stack=world.containerItems(entity.id())
 	for offset=range[1],range[2] do
@@ -83,4 +79,4 @@ function Zcontainer.canFitAt(pass, range)
 		return true
 	end
 	return false
-end
+end]]

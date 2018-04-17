@@ -2,16 +2,79 @@
 * text=auto
 
 # Custom for Visual Studio
-*.cs     diff=csharp
+*.cs diff=csharp
 
 # Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
+*.doc diff=astextplain
+*.DOC diff=astextplain
 *.docx diff=astextplain
 *.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+*.dot diff=astextplain
+*.DOT diff=astextplain
+*.pdf diff=astextplain
+*.PDF diff=astextplain
+*.rtf diff=astextplain
+*.RTF diff=astextplain
+
+$ cat .gitattributes
+*.patch linguist-detectable=true
+*.activeitem linguist-detectable=true
+*.animation linguist-detectable=true
+*.biome linguist-detectable=true
+*.chest linguist-detectable=true
+*.codex linguist-detectable=true
+*.config linguist-detectable=true
+*.consumable linguist-detectable=true
+*.currency linguist-detectable=true
+*.frames linguist-detectable=true
+*.head linguist-detectable=true
+*.item linguist-detectable=true
+*.legs linguist-detectable=true
+*.liqitem linguist-detectable=true
+*.liquid linguist-detectable=true
+*.material linguist-detectable=true
+*.miningtool linguist-detectable=true
+*.monstertype linguist-detectable=true
+*.namesource linguist-detectable=true
+*.npctype linguist-detectable=true
+*.object linguist-detectable=true
+*.questtemplate linguist-detectable=true
+*.recipe linguist-detectable=true
+*.species linguist-detectable=true
+*.tech linguist-detectable=true
+*.tenant linguist-detectable=true
+*.treasurepools linguist-detectable=true
+*.vehicle linguist-detectable=true
+
+*.patch linguist-language=Diff
+*.activeitem linguist-language=JSON
+*.animation linguist-language=JSON
+*.biome linguist-language=JSON
+*.chest linguist-language=JSON
+*.codex linguist-language=JSON
+*.config linguist-language=JSON
+*.consumable linguist-language=JSON
+*.currency linguist-language=JSON
+*.frames linguist-language=JSON
+*.head linguist-language=JSON
+*.item linguist-language=JSON
+*.legs linguist-language=JSON
+*.liqitem linguist-language=JSON
+*.liquid linguist-language=JSON
+*.material linguist-language=JSON
+*.miningtool linguist-language=JSON
+*.monstertype linguist-language=JSON
+*.namesource linguist-language=JSON
+*.npctype linguist-language=JSON
+*.object linguist-language=JSON
+*.questtemplate linguist-language=JSON
+*.recipe linguist-language=JSON
+*.species linguist-language=JSON
+*.tech linguist-language=JSON
+*.tenant linguist-language=JSON
+*.treasurepools linguist-language=JSON
+*.vehicle linguist-language=JSON
+#biome codex config activeitem chest head legs currency item animation consumable liqitem frames liquid namesource npctype object questtemplate recipe species tech tenant material treasurepools vehicle
+#*.biome; *.codex; *.config; *.activeitem; *.chest; *.head; *.legs; *.currency; *.item; *.animation; *.consumable; *.liqitem; *.frames; *.liquid; *.namesource; *.npctype; *.object; *.questtemplate; *.recipe; *.species; *.tech; *.tenant; *.material
+#*.treasurepools; *.vehicle; *.monstertype; *.miningtool; *.patch; *.json
+#?([{}[\[:]) ?

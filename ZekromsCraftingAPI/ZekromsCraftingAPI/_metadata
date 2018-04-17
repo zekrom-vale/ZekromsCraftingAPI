@@ -1,0 +1,8 @@
+{
+  "author" : "zekrom_vale",
+  "description" : "Adds easy to use multicraft system that can output pools and multiple items.\nAdds an option for shaped recipes.\n\nSorry, only object crafting with no trigger.",
+  "friendlyName" : "Zekrom's Crafting API",
+  "friendlyname" : "Zekrom's Crafting API",
+  "name" : "ZekromsCraftingAPI",
+  "version" : "0.1"
+}

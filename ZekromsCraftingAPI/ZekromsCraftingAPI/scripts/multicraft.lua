@@ -44,12 +44,26 @@ function verify()
 end
 
 function fixIO(item,size)
-	if item==nil or type(item)~="number" or item%1~=0 or item>size or item<=0 then
+	local ran,val=pcall(pcallFixIO, item, size)
+	if ran then
+		return val
+	else
+		Zutil.API()
+		sb.logWarn("pcall failed at: "..Zutil.sbName())
+		return item
+	end
+end
+
+function pcallFixIO(item,size)
+	if item==nil or type(item)~="number" then
 		Zutil.API()
 		sb.logWarn("Input/output array is not 2 elements for: "..Zutil.sbName()..".  Trying to compensate")
-		return nil
+	elseif item%1~=0 or item>size or item<=0 then
+		Zutil.API()
+		sb.logWarn("Input/output invalid: "..Zutil.sbName()..".  Trying to compensate")
+	else
+		return item
 	end
-	return item
 end
 
 function verifyIn()
@@ -168,19 +182,25 @@ function delayKey(delay)
 end
 
 function die()
-	local drop=config.getParameter("multicraftAPI.drop", "all")
 	local poz=entity.position()
-	if drop=="none" or drop==0 then
-		return
-	elseif type(drop)=="number" then
-		if drop>0 then
-			for _,item in pairs(storage.overflow) do
-				world.spawnItem(item.name, poz, math.ceil(item.count*drop))
+	if config.getParameter("multicraftAPI.dropStorage", false) or (type(storage.wait)=="number" and storage.wait~=0) then
+		local drop=config.getParameter("multicraftAPI.drop", "all")
+		if drop=="none" or drop==0 then
+			return
+		elseif type(drop)=="number" then
+			if drop>0 then
+				for _,item in pairs(storage.overflow) do
+					world.spawnItem(item.name, poz, math.ceil(item.count*drop))
+				end
+			else
+				for _,item in pairs(storage.overflow) do
+					world.spawnItem(item.name, poz, math.floor(item.count*-drop))
+				end
 			end
 		else
 			for _,item in pairs(storage.overflow) do
-				world.spawnItem(item.name, poz, math.floor(item.count*-drop))
-			end
+			world.spawnItem(item.name, poz, item.count)
+		end
 		end
 	else
 		for _,item in pairs(storage.overflow) do

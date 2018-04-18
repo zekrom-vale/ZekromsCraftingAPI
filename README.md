@@ -18,27 +18,17 @@ All of that easly used by people who don't know lua or complex JSON.
 * `"/multicraftAPI/drop"`: `"all" or Number` Behavior of overflow when broken (Positive numbers round up negative numbers round down)
 * `"/multicraftAPI/killStorage"`: `Bool` Defines that the storage overflow should be killed
 
-{...
-
-"scripts":["/scripts/multicraft.lua"],
-
-"scriptDelta": `Int`,
-
-"multicraftAPI":{
-
-	"input":[`Int`,`Int`],
-
-	"output":[`Int`,`Int`],
-
-	"recipefile":`/Path`
-
-	[[,"drop":`"all" or Number`]]
-
-	[[,"killStorage":`Bool`]]
-
-}
-
-...}
+	{...
+	"scripts":["/scripts/multicraft.lua"],
+	"scriptDelta": `Int`,
+	"multicraftAPI":{
+		"input":[`Int`,`Int`],
+		"output":[`Int`,`Int`],
+		"recipefile":`/Path`
+		[[,"drop":`"all" or Number`]]
+		[[,"killStorage":`Bool`]]
+	}
+	...}
 
 
 ## Crafting config
@@ -54,39 +44,25 @@ All of that easly used by people who don't know lua or complex JSON.
 * `"/delay"`: `Int` Time for the item to craft times the dt must be an integer
 * `"/shaped"`: Only runs in the order given instead of shapless
 
-[{
-
-	"input":[
-
-		{"name":`String`,"count":`Int` [[,"damage":`Number`]] [[,"consume":`Bool`]]},
-
-		{"name":`String`,"count":`Int`}
-
-	],
-
-	"output":[
-
-		{"name":`String`,"count":`Int`},
-
-		{"pool":`String`}
-
-	]
-
-	[[,"delay":`Int`]]
-
-	[[,"shaped":`Bool`]]
-
-}...]
+	[{
+		"input":[
+			{"name":`String`,"count":`Int` [[,"damage":`Number`]] [[,"consume":`Bool`]]},
+			{"name":`String`,"count":`Int`}
+		],
+		"output":[
+			{"name":`String`,"count":`Int`},
+			{"pool":`String`}
+		]
+		[[,"delay":`Int`]]
+		[[,"shaped":`Bool`]]
+	}...]
 
 ## Item config for damage (Standard starbound config)
 
 * `"/durability"`: `Int` The amount of durability an item has
 * `"/durabilityPerUse"`: `Int`How much durability to use per use or craft
 
-{...
-
-	"durability": `Int`,
-
-	"durabilityPerUse": `Int`
-
-...}
+	{...
+		"durability": `Int`,
+		"durabilityPerUse": `Int`
+	...}

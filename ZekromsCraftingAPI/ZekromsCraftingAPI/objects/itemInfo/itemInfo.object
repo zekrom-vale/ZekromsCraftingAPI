@@ -1,0 +1,45 @@
+{
+	"objectName" : "itemInfo",
+	"rarity" : "Common",
+	"category" : "storage",
+	"description" : "Generates outputs JSON info for the inserted item.  Also logs the information as well as the 'root.itemConfig'.  NOT A PET TETHER.",
+	"shortdescription" : "Item Info Util",
+	"race" : "generic",
+	"printable" : false,
+
+	"objectType" : "container",
+	"slotCount" : 1,
+	"uiConfig" : "/interface/chests/pettether.config",
+	"subtitle" : "",
+	"frameCooldown" : 5,
+	"autoCloseCooldown" : 3600,
+	"scripts" : [ "itemInfo.lua" ],
+	"scriptDelta":100,
+	"inventoryIcon" : "/objects/spawner/pettether/pettethericon.png",
+
+	"animation" : "/objects/spawner/pettether/pettether.animation",
+	"animationParts" : {
+		"tether" : "/objects/spawner/pettether/pettether.png",
+		"tetherlit" : "/objects/spawner/pettether/pettetherlit.png"
+	},
+	"animationPosition" : [-6, 0],
+
+	"orientations" : [
+		{
+			"imageLayers" : [ { "image" : "/objects/spawner/pettether/pettether.png:off.<frame>", "fullbright" : true }, { "image" : "/objects/spawner/pettether/pettetherlit.png:off.<frame>" } ],
+			"imagePosition" : [-6, 0],
+			"direction" : "left",
+			"flipImages" : true,
+			"frames" : 1,
+			"animationCycle" : 1.2,
+			"spaceScan" : 0.1
+		},{
+			"imageLayers" : [ { "image" : "/objects/spawner/pettether/pettether.png:off.<frame>", "fullbright" : true }, { "image" : "/objects/spawner/pettether/pettetherlit.png:off.<frame>" } ],
+			"imagePosition" : [-6, 0],
+			"direction" : "right",
+			"frames" : 1,
+			"animationCycle" : 1.2,
+			"spaceScan" : 0.1
+		}
+	]
+}

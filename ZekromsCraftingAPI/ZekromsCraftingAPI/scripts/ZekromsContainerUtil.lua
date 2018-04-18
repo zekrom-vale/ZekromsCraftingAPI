@@ -36,7 +36,7 @@ end
 function Zcontainer.consumeAt(item, range)
 	local stack=world.containerItems(entity.id())
 	for offset=range[1],range[2] do
-		if stack[offset]~=nil and stack[offset]["name"]==item.name then
+		if stack[offset]~=nil and root.itemDescriptorsMatch(stack[offset],item) then
 			if stack[offset]["count"]>=item.count then
 				world.containerConsumeAt(entity.id(), offset-1, item.count)
 				return true
@@ -51,7 +51,7 @@ end
 function Zcontainer.putAt(item, range)
 	local stack=world.containerItems(entity.id())
 	for offset=range[1],range[2] do
-		if stack[offset]==nil or stack[offset]["name"]==item.name then
+		if stack[offset]==nil or root.itemDescriptorsMatch(stack[offset],item) then
 			item=world.containerPutItemsAt(entity.id(), item, offset-1)
 			if item==nil or next(item)==nil or item.count<=0 then
 				return true

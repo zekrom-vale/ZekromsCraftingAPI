@@ -9,7 +9,7 @@ function init()
 	self.output=config.getParameter("multicraftAPI.output", {1, size})
 	self.recipes=root.assetJson(config.getParameter("multicraftAPI.recipefile"),{})
 	self.clockMax=math.floor(config.getParameter("multicraftAPI.clockMax",10000))
-	verify()
+	self.init=true
 end
 
 function verify()
@@ -105,6 +105,10 @@ function verifyIn()
 end
 
 function update(dt)
+	if self.init then
+		verify()
+		self.init=false
+	end
 	storage.clock=(storage.clock+1)%self.clockMax
 	if storage.wait~=nil and storage.wait==storage.clock then
 		storage.overflow=Zcontainer.tryAdd(storage.overflow)
@@ -132,7 +136,7 @@ function consumeItemsShaped(items, prod, stacks, delay) --In order
 	for key,item in pairs(items) do
 		local stack=stacks[key+self.input[1]-1]
 		if stack==nil then	return false	end
-		if not(item.name==stack.name and item.count<=stack.count) then
+		if not(root.itemDescriptorsMatch(stack, item) and item.count<=stack.count) then
 			return false
 		end
 	end
@@ -155,7 +159,7 @@ function consumeItems(items, prod, stack, delay) --No order
 		if true then
 			local counts=0
 			for index=self.input[1],self.input[2] do
-				if stack[index]~=nil and item.name==stack[index]["name"] then
+				if root.itemDescriptorsMatch(stack[index], item) then
 					counts=counts+stack[index]["count"]
 					if item.count<=counts then	goto skip	end
 				end

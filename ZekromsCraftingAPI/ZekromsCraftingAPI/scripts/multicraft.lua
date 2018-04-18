@@ -1,5 +1,6 @@
 require "/scripts/ZekromsContainerUtil.lua"
 require "/scripts/ZekromsUtil.lua"
+require "/scripts/ZekromsItemUtil.lua"
 function init()
 	if storage.clock==nil then
 		storage.clock=0
@@ -136,7 +137,9 @@ function consumeItemsShaped(items, prod, stacks, delay) --In order
 		end
 	end
 	for _,item in pairs(items) do
-		if item.consume~=false then
+		if item.damage==true then
+			Zitem.damage(item)
+		elseif item.consume~=false then
 			Zcontainer.consumeAt(item, self.input)
 		end
 	end
@@ -162,7 +165,9 @@ function consumeItems(items, prod, stack, delay) --No order
 		::skip::
 	end
 	for _,item in pairs(items) do
-		if item.consume~=false then
+		if item.damage==true then
+			Zitem.damage(item)
+		elseif item.consume~=false then
 			Zcontainer.consumeAt(item, self.input)
 		end
 	end

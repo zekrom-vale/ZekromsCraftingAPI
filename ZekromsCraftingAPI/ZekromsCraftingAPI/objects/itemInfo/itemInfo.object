@@ -4,7 +4,7 @@
 	"category" : "storage",
 	"description" : "Generates outputs JSON info for the inserted item.  Also logs the information as well as the 'root.itemConfig'.  NOT A PET TETHER.",
 	"shortdescription" : "Item Info Util",
-	"race" : "generic",
+	"race" : "dev",
 	"printable" : false,
 
 	"objectType" : "container",
@@ -12,7 +12,7 @@
 	"uiConfig" : "/interface/chests/pettether.config",
 	"subtitle" : "",
 	"frameCooldown" : 5,
-	"autoCloseCooldown" : 3600,
+	"autoCloseCooldown" : 36000,
 	"scripts" : [ "itemInfo.lua" ],
 	"scriptDelta":100,
 	"inventoryIcon" : "/objects/spawner/pettether/pettethericon.png",
@@ -31,14 +31,14 @@
 			"direction" : "left",
 			"flipImages" : true,
 			"frames" : 1,
-			"animationCycle" : 1.2,
+			"animationCycle" : 2.2,
 			"spaceScan" : 0.1
 		},{
 			"imageLayers" : [ { "image" : "/objects/spawner/pettether/pettether.png:off.<frame>", "fullbright" : true }, { "image" : "/objects/spawner/pettether/pettetherlit.png:off.<frame>" } ],
 			"imagePosition" : [-6, 0],
 			"direction" : "right",
 			"frames" : 1,
-			"animationCycle" : 1.2,
+			"animationCycle" : 2.2,
 			"spaceScan" : 0.1
 		}
 	]

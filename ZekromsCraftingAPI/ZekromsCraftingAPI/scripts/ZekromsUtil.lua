@@ -17,7 +17,7 @@ end
 
 function Zutil.sbName()
 	local name=config.getParameter("objectName")
-	if name~=nil then	name=config.getParameter("itemName")	end
+	if name==nil then	name=config.getParameter("itemName")	end
 	return "'"..(name or "null").."'.  id: '"..(entity.id() or "null").."'"
 end
 

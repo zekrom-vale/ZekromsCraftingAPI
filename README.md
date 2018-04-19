@@ -8,7 +8,7 @@
 * Define item alternative (via the `names` system)
 * Dellays
 * Checks for errors and trys to compensate for them (*Check your log!*)
-* Automatic processing (Untill I find out how to wait for press button)
+* Automatic processing *(On press may not be posible)*
 #### All of that easily used by people who don't know lua or complex JSON.
 
 # How to set up
@@ -103,6 +103,7 @@
 	"durabilityPerUse":`Int`
 ...}
 ```
+
 # Using functions in your lua file
 Use `require /Path` to define plug into the functions of each .lua file
 

@@ -47,7 +47,7 @@ All of that easly used by people who don't know lua or complex JSON.
 * `"/input"`: `Array` Defines paramaters for the crafting input
 	* `"/input/*/name"`: `String` The item name to check for
 	* `"/input/*/count"`: `Int` The amount to check for
-	* - **WIP**`"/input/*/names"`: `Array of String` Defines the posible items to use-
+	* `"/input/*/names"`: `Array of String` Defines the posible items to use
 	* `"/input/*/damage"`: `Number` How mutch to damage the item instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
 	* `"/input/*/consume"`: `Bool` Defines whether to consume the item or not | `Default(false)`
 * `"/output"`: `Array` Defines paramaters for the crafting output
@@ -61,11 +61,11 @@ All of that easly used by people who don't know lua or complex JSON.
 [{
 	"input":[
 		{"name":`String`,"count":`Int` [[,"damage":`Number`]] [[,"consume":`Bool`]]},
-		{"name":`String`,"count":`Int`}
+		{"names":`Array of String`,"count":`Int` [[,"damage":`Number`]] [[,"consume":`Bool`]]}
 	],
 	"output":[
 		{"name":`String`,"count":`Int`},
-		{"pool":`String` [[,"level": ``]]}
+		{"pool":`String` [[,"level": `Int`]]}
 	]
 	[[,"delay":`Int`]]
 	[[,"shaped":`Bool`]]

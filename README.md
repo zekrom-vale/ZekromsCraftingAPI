@@ -5,6 +5,7 @@
 * Define input and output (Allowing storage **and** crafting)
 * No consumption option
 * Shaped crafting
+* Define item alternative (via the `names` system)
 * Dellays
 * Checks for errors and trys to compensate for them (*Check your log!*)
 * Automatic processing (Untill I find out how to wait for press button)
@@ -12,23 +13,23 @@ All of that easly used by people who don't know lua or complex JSON.
 
 # How to set up
 ## Key
-`[[ ]]`: Indicaes that it is optional
-`...`: Indicates that it continues
-`/Path`: Defines the path from the root to the file
-`File`: Defineds the file name (including extention)
-`Bool`: Boolian true or false
-`Int`: A real whole number
-`Number`: Any real number
-`Array`: A list of values surounded by `[]` (Not `[[ ]]` in this key)
+`< >`: Indicaes that it is **optional** (Used instead of `[ ]` as in JSON it's an array)
+`...`: Indicates that it **continues**
+`/Path`: Defines the **path** from the **root** to the file
+`File`: Defineds the **file name** (including extention)
+`Bool`: Boolian `true` or `false`
+`Int`: A real **whole number**
+`Number`: Any **real number**
+`Array`: A **list of values** surounded by `[]`
 
 ## Object config
-* `"/scripts"`: `/Path` Point to the crafting script (Can use [`/Path` [[,`...`]] ])
-* `"/scriptDelta"`: `Int` Defines how often the script(s) run (The clock step is the delta)
-* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the input for crafting, container slot 1 is 1 | `Default([1, size])`
-* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the output for crafting, container slot 1 is 1 | `Default([1, size])`
-* `"/multicraftAPI/recipefile"`: `/Path` Points to the recipe JSON file
-* `"/multicraftAPI/drop"`: `"all" or Number` Decimal of overflow droped broken (Positive numbers round up negative numbers round down) | `Default("all")`
-* `"/multicraftAPI/killStorage"`: `Bool` Defines that the storage overflow should be killed | `Default(false)`
+* `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
+* `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the delta)
+* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting**, container slot 1 is 1 | `Default([1, size])`
+* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting**, container slot 1 is 1 | `Default([1, size])`
+* `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
+* `"/multicraftAPI/drop"`: `"all" or Number` Decimal of **overflow droped** when broken (Positive numbers round up negative numbers round down) | `Default("all")`
+* `"/multicraftAPI/killStorage"`: `Bool` Defines that the **storage overflow** should be **killed** | `Default(false)`
 ```
 {...
 "scripts":["/scripts/multicraft.lua"],
@@ -37,44 +38,64 @@ All of that easly used by people who don't know lua or complex JSON.
 	"input":[`Int`,`Int`],
 	"output":[`Int`,`Int`],
 	"recipefile":`/Path`
-	[[,"drop":`"all" or Number`]]
-	[[,"killStorage":`Bool`]]
+	<,"drop":`"all" or Number`>
+	<,"killStorage":`Bool`>
 }
 ...}
 ```
 
 ## Crafting config
-* `"/input"`: `Array` Defines paramaters for the crafting input
-	* `"/input/*/name"`: `String` The item name to check for
-	* `"/input/*/count"`: `Int` The amount to check for
-	* `"/input/*/names"`: `Array of String` Defines the posible items to use
-	* `"/input/*/damage"`: `Number` How mutch to damage the item instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
-	* `"/input/*/consume"`: `Bool` Defines whether to consume the item or not | `Default(false)`
-* `"/output"`: `Array` Defines paramaters for the crafting output
-	* `"/output/*/name"`: `String` The item name to give
-	* `"/output/*/count"`: `String` The amount to give
-	* OR `"/output/*/pool"`: `String` Defines the pool to generate
-	* `"/output/*/level"`: `Int` The pool level to generate | `Default(0)`
-* `"/delay"`: `Int` Time for the item to craft times the dt must be an integer | `Default(0)`
-* `"/shaped"`: `Bool` Only runs in the order given instead of shapless | `Default(false)`
+### Due to the way the script works you can use an array or object at the root `/`
+* `/Unique Identifier`: `String` Defines the **ID** for the recipe (To compensate for the lacking JSON-patch system)
+* `"/input"`: `Array` Defines **paramaters** for the crafting `input`
+	* `"/input/*/name"`: `String` The `item name` to check for
+	* `"/input/*/count"`: `Int` The **amount** to check for
+	* `"/input/*/names"`: `Array of String` Defines the posible `items` to use
+	* `"/input/*/damage"`: `Number` How mutch to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
+	* `"/input/*/consume"`: `Bool` Defines whether to **consume the item** or not | `Default(false)`
+* `"/output"`: `Array` Defines **paramaters** for the crafting `output`
+	* `"/output/*/name"`: `String` The `item name` to give
+	* `"/output/*/count"`: `String` The **amount** to give
+	* OR `"/output/*/pool"`: `String` Defines the `pool` to generate
+	* `"/output/*/level"`: `Int` The `pool level` to generate | `Default(0)`
+* `"/delay"`: `Int` **Time** for the **item to craft** times the dt must be an integer | `Default(0)`
+* `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
+#### Using a object (Recommended)
 ```
-[{
+{
+`Unique Identifier`:{
 	"input":[
-		{"name":`String`,"count":`Int` [[,"damage":`Number`]] [[,"consume":`Bool`]]},
-		{"names":`Array of String`,"count":`Int` [[,"damage":`Number`]] [[,"consume":`Bool`]]}
+		{"name":`String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>},
+		{"names":`Array of String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>}
 	],
 	"output":[
 		{"name":`String`,"count":`Int`},
-		{"pool":`String` [[,"level": `Int`]]}
+		{"pool":`String` <,"level": `Int`>}
 	]
-	[[,"delay":`Int`]]
-	[[,"shaped":`Bool`]]
+	<,"delay":`Int`>
+	<,"shaped":`Bool`>
+}...}
+```
+---
+#### Using an array
+```
+[{
+	"input":[
+		{"name":`String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>},
+		{"names":`Array of String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>}
+	],
+	"output":[
+		{"name":`String`,"count":`Int`},
+		{"pool":`String` <,"level": `Int`>}
+	]
+	<,"delay":`Int`>
+	<,"shaped":`Bool`>
 }...]
 ```
 ## Item config for damage (Standard starbound config)
 
-* `"/durability"`: `Int` The amount of durability an item has
-* `"/durabilityPerUse"`: `Int` How much durability to use per use or craft (Will consume item and will not jam with not enough durability)
+* `"/durability"`: `Int` The amount of `durability` an item has
+* `"/durabilityPerUse"`: `Int` How much `durability` to use **per use or craft** (Will consume item and will not jam with not enough durability)
 ```
 {...
 	"durability":`Int`,
@@ -82,7 +103,7 @@ All of that easly used by people who don't know lua or complex JSON.
 ...}
 ```
 # Using functions in your lua file
-Use `require /Path` to define plug into the functions of each lua file
+Use `require /Path` to define plug into the functions of each .lua file
 
 ---
 

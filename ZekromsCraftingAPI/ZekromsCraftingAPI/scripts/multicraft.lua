@@ -133,14 +133,34 @@ function update(dt)
 end
 
 function consumeItemsShaped(items, prod, stacks, delay)
+	local item2={}
 	for key,item in pairs(items) do
 		local stack=stacks[key+self.input[1]-1]
 		if stack==nil then	return false	end
 		if not(root.itemDescriptorsMatch(stack, item) and item.count<=stack.count) then
-			return false
+			if item.names~=nil and item.count<=stack.count then
+				for _,ilist in pairs(item.names) do
+					local obj= Zutil.deepcopy(item)
+					obj.names=nil
+					obj.name=ilist
+					if root.itemDescriptorsMatch(stack[index], obj) then
+						counts=counts+stack[index]["count"]
+						table.insert(item2, obj)
+					end
+				end
+			else
+				return false
+			end
 		end
 	end
 	for _,item in pairs(items) do
+		if type(item.damage)=="number" then
+			Zitem.damage(item)
+		elseif item.consume~=false then
+			Zcontainer.consumeAt(item, self.input)
+		end
+	end
+	for _,item in pairs(item2) do
 		if type(item.damage)=="number" then
 			Zitem.damage(item)
 		elseif item.consume~=false then
@@ -155,11 +175,23 @@ function consumeItemsShaped(items, prod, stacks, delay)
 end
 
 function consumeItems(items, prod, stack, delay)
+	local item2={}
 	for _,item in pairs(items) do
 		if true then
 			local counts=0
 			for index=self.input[1],self.input[2] do
-				if root.itemDescriptorsMatch(stack[index], item) then
+				if item.names~=nil then
+					for _,ilist in pairs(item.names) do
+						local obj= Zutil.deepcopy(item)
+						obj.names=nil
+						obj.name=ilist
+						if root.itemDescriptorsMatch(stack[index], obj) then
+							counts=counts+stack[index]["count"]
+							table.insert(item2, obj)
+							if item.count<=counts then	goto skip	end
+						end
+					end
+				elseif root.itemDescriptorsMatch(stack[index], item) then
 					counts=counts+stack[index]["count"]
 					if item.count<=counts then	goto skip	end
 				end
@@ -170,7 +202,13 @@ function consumeItems(items, prod, stack, delay)
 	end
 	for _,item in pairs(items) do
 		if type(item.damage)=="number" then
-			sb.logInfo(sb.printJson(item,1))
+			Zitem.damage(item)
+		elseif item.consume~=false then
+			Zcontainer.consumeAt(item, self.input)
+		end
+	end
+	for _,item in pairs(item2) do
+		if type(item.damage)=="number" then
 			Zitem.damage(item)
 		elseif item.consume~=false then
 			Zcontainer.consumeAt(item, self.input)

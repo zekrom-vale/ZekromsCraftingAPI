@@ -3,7 +3,7 @@ function Zitem.damageAt(offset)--Not up to date!
 	local id, config=entity.id(), root.itemConfig(item.name).config
 	item=world.containerItemAt(id, offset-1)
 	item.parameters.durabilityHit=(item.parameters.durabilityHit or 0)+(config.durabilityPerUse or 1)
-	if (config.durability or 100)<=item.parameters.durabilityHit then
+	if (config.durability or 200)<=item.parameters.durabilityHit then
 		world.containerConsumeAt(id, offset-1, 1)
 	else
 		world.containerSwapItemsNoCombine(id, item, offset-1)
@@ -11,7 +11,7 @@ function Zitem.damageAt(offset)--Not up to date!
 end
 
 function Zitem.damage(item)
-	sb.logInfo(sb.printJson(item,1))
+	if item.names~=nil and item.name==nil then return nil end
 	local id=entity.id()
 	local stacks=world.containerItems(id)
 	local config=root.itemConfig(item.name).config
@@ -24,7 +24,7 @@ function Zitem.damage(item)
 		local stack=stacks[offset]
 		if root.itemDescriptorsMatch(stack, item) then
 			stack.parameters.durabilityHit=(stack.parameters.durabilityHit or 0)+(damage or item.damage or 1)
-			if (config.durability or 100)<=stack.parameters.durabilityHit then
+			if (config.durability or 200)<=stack.parameters.durabilityHit then
 				world.containerConsumeAt(id, offset-1, 1)
 			else
 				world.containerSwapItemsNoCombine(id, stack, offset-1)

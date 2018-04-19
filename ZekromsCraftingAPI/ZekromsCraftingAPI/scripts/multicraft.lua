@@ -132,7 +132,7 @@ function update(dt)
 	end
 end
 
-function consumeItemsShaped(items, prod, stacks, delay) --In order
+function consumeItemsShaped(items, prod, stacks, delay)
 	for key,item in pairs(items) do
 		local stack=stacks[key+self.input[1]-1]
 		if stack==nil then	return false	end
@@ -141,7 +141,7 @@ function consumeItemsShaped(items, prod, stacks, delay) --In order
 		end
 	end
 	for _,item in pairs(items) do
-		if item.damage==true then
+		if type(item.damage)=="number" then
 			Zitem.damage(item)
 		elseif item.consume~=false then
 			Zcontainer.consumeAt(item, self.input)
@@ -154,7 +154,7 @@ function consumeItemsShaped(items, prod, stacks, delay) --In order
 	return Zcontainer.addItems(prod)
 end
 
-function consumeItems(items, prod, stack, delay) --No order
+function consumeItems(items, prod, stack, delay)
 	for _,item in pairs(items) do
 		if true then
 			local counts=0
@@ -164,12 +164,13 @@ function consumeItems(items, prod, stack, delay) --No order
 					if item.count<=counts then	goto skip	end
 				end
 			end
-			return false --Must be last statement in a block
+			return false
 		end
 		::skip::
 	end
 	for _,item in pairs(items) do
-		if item.damage==true then
+		if type(item.damage)=="number" then
+			sb.logInfo(sb.printJson(item,1))
 			Zitem.damage(item)
 		elseif item.consume~=false then
 			Zcontainer.consumeAt(item, self.input)
@@ -192,7 +193,7 @@ end
 
 function die()
 	local poz=entity.position()
-	if config.getParameter("multicraftAPI.dropStorage", false) or (type(storage.wait)=="number" and storage.wait~=0) then
+	if config.getParameter("multicraftAPI.killStorage", false) or (type(storage.wait)=="number" and storage.wait~=0) then
 		local drop=config.getParameter("multicraftAPI.drop", "all")
 		if drop=="none" or drop==0 then
 			return

@@ -9,19 +9,7 @@ function init()
 	self.output=config.getParameter("multicraftAPI.output", {1, size})
 	self.recipes=root.assetJson(config.getParameter("multicraftAPI.recipefile"),{})
 	self.clockMax=math.floor(config.getParameter("multicraftAPI.clockMax",10000))
-	self.trigger=getTrigger()
-	sb.logInfo(tostring(self.trigger))
 	self.init=true
-end
-
-function getTrigger()
-	sb.logInfo(sb.printJson(root.assetJson(config.getParameter("uiConfig")),1))
-	for _,value in pairs(root.assetJson(config.getParameter("uiConfig")).scripts) do
-		if value=="/scripts/ZekTrigger.lua" then
-			return true
-		end
-	end
-	return false
 end
 
 function verify()
@@ -117,13 +105,9 @@ function verifyIn()
 end
 
 function update(dt)
-	sb.logInfo(tostring(storage.active))
 	if self.init then
 		verify()
 		self.init=false
-	end
-	if self.trigger==true and storage.active~=true then
-		return
 	end
 	storage.clock=(storage.clock+1)%self.clockMax
 	if storage.wait~=nil and storage.wait==storage.clock then
@@ -145,8 +129,6 @@ function update(dt)
 				if storage.overflow~=false then	break	end
 			end
 		end
-	elseif self.trigger==true then
-		storage.active=false
 	end
 end
 
@@ -273,8 +255,4 @@ function die()
 			world.spawnItem(item.name, poz, item.count)
 		end
 	end
-end
-
-function triggerReceive()
-	storage.active=true
 end

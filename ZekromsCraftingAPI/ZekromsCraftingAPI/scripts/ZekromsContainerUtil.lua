@@ -34,6 +34,7 @@ function Zcontainer.treasure(items)
 end
 
 function Zcontainer.consumeAt(item, range)
+	if item.name==nil and item.names~=nil then return nil end
 	local stack=world.containerItems(entity.id())
 	for offset=range[1],range[2] do
 		if stack[offset]~=nil and root.itemDescriptorsMatch(stack[offset],item) then

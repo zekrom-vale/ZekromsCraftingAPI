@@ -9,24 +9,25 @@
 * Dellays
 * Checks for errors and trys to compensate for them (*Check your log!*)
 * Automatic processing (Untill I find out how to wait for press button)
-All of that easly used by people who don't know lua or complex JSON.
+#### All of that easily used by people who don't know lua or complex JSON.
 
 # How to set up
 ## Key
-`< >`: Indicaes that it is **optional** (Used instead of `[ ]` as in JSON it's an array)
-`...`: Indicates that it **continues**
-`/Path`: Defines the **path** from the **root** to the file
-`File`: Defineds the **file name** (including extention)
-`Bool`: Boolian `true` or `false`
-`Int`: A real **whole number**
-`Number`: Any **real number**
-`Array`: A **list of values** surounded by `[]`
+* `< >`: Indicaes that it is **optional** (Used instead of `[ ]` as in JSON it's an array)
+* `...`: Indicates that it **continues**
+* `/Path`: Defines the **path** from the **root** to the file
+* `File`: Defineds the **file name** (including extention)
+* `Bool`: Boolean `true` or `false`
+* `Int`: A real **whole number**
+* `Number`: Any **real number**
+* `Array`: A **list of values** surounded by `[]`
+* Note: The first container slot is `1`. **Not `0`!**  (`2` is `2`,... `n` is `n`)
 
 ## Object config
 * `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
 * `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the delta)
-* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting**, container slot 1 is 1 | `Default([1, size])`
-* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting**, container slot 1 is 1 | `Default([1, size])`
+* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting** | `Default([1, size])`
+* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting** | `Default([1, size])`
 * `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
 * `"/multicraftAPI/drop"`: `"all" or Number` Decimal of **overflow droped** when broken (Positive numbers round up negative numbers round down) | `Default("all")`
 * `"/multicraftAPI/killStorage"`: `Bool` Defines that the **storage overflow** should be **killed** | `Default(false)`
@@ -60,7 +61,7 @@ All of that easly used by people who don't know lua or complex JSON.
 	* `"/output/*/level"`: `Int` The `pool level` to generate | `Default(0)`
 * `"/delay"`: `Int` **Time** for the **item to craft** times the dt must be an integer | `Default(0)`
 * `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
-#### Using a object (Recommended)
+#### Using an object (Recommended)
 ```
 {
 `Unique Identifier`:{
@@ -108,19 +109,19 @@ Use `require /Path` to define plug into the functions of each .lua file
 ---
 
 ## ZekromsContainerUtil.lua
-### Zcontainer.consumeAt(`item descriptor` item , `Array of 2 Int` range)
+### `bool` Zcontainer.consumeAt(`item descriptor` item , `Array of 2 Int` range)
 Consumes the given `item` within the `range` given.  Returns `true` if successful and `false` otherwise.
 
-### Zcontainer.putAt(`item descriptor` item, `Array of 2 Int` range)
+### `Bool or Object` Zcontainer.putAt(`item descriptor` item, `Array of 2 Int` range)
 Trys to insert the `item` within the given `range` returns the `item descriptor` of the overflow or `true` if there is no overflow.
 
 ## ZekromsItemUtil.lua
-### Zitem.damage(`item descriptor` item)
+### `bool` Zitem.damage(`item descriptor` item)
 Damages the `item` and removes it if the durabilityHit is grater than or equal to the durability.  Returns `false` if it fails, and `true` otherwise.  Add `item.damage` to change the factor just like in the Crafting config at `"/input/*/damage"`
 
 ## ZekromsUtil.lua
-### Zutil.sbName()
+### `String` Zutil.sbName()
 Returns the `item name` or `object name` as well as the `object ID` for loging purposes.
 
-### Zutil.deepcopy(`Table or Object`)
+### `Table or Object` Zutil.deepcopy(`Table or Object`)
 Returns a copy of the `Object` or `Table` based off of http://lua-users.org/wiki/CopyTable

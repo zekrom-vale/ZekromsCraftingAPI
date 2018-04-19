@@ -6,7 +6,7 @@
 * No consumption option
 * Shaped crafting
 * Dellays
-* Checks for errors and trys to compensate for them (Check your log!)
+* Checks for errors and trys to compensate for them (*Check your log!*)
 * Automatic processing (Untill I find out how to wait for press button)
 All of that easly used by people who don't know lua or complex JSON.
 
@@ -24,11 +24,11 @@ All of that easly used by people who don't know lua or complex JSON.
 ## Object config
 * `"/scripts"`: `/Path` Point to the crafting script (Can use [`/Path` [[,`...`]] ])
 * `"/scriptDelta"`: `Int` Defines how often the script(s) run (The clock step is the delta)
-* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the input for crafting, container slot 1 is 1
-* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the output for crafting, container slot 1 is 1
+* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the input for crafting, container slot 1 is 1 | `Default([1, size])`
+* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the output for crafting, container slot 1 is 1 | `Default([1, size])`
 * `"/multicraftAPI/recipefile"`: `/Path` Points to the recipe JSON file
-* `"/multicraftAPI/drop"`: `"all" or Number` Decimal of overflow droped broken (Positive numbers round up negative numbers round down)
-* `"/multicraftAPI/killStorage"`: `Bool` Defines that the storage overflow should be killed
+* `"/multicraftAPI/drop"`: `"all" or Number` Decimal of overflow droped broken (Positive numbers round up negative numbers round down) | `Default("all")`
+* `"/multicraftAPI/killStorage"`: `Bool` Defines that the storage overflow should be killed | `Default(false)`
 ```
 {...
 "scripts":["/scripts/multicraft.lua"],
@@ -47,15 +47,16 @@ All of that easly used by people who don't know lua or complex JSON.
 * `"/input"`: `Array` Defines paramaters for the crafting input
 	* `"/input/*/name"`: `String` The item name to check for
 	* `"/input/*/count"`: `Int` The amount to check for
-	* `"/input/*/damage"`: `Number` How mutch to damage the item instead of consuming it (Positive numbers round up negative numbers round down)
-	* `"/input/*/consume"`: `Bool` Defines whether to consume the item or not
-* `"/output"`:  `Array` Defines paramaters for the crafting output
+	* - **WIP**`"/input/*/names"`: `Array of String` Defines the posible items to use-
+	* `"/input/*/damage"`: `Number` How mutch to damage the item instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
+	* `"/input/*/consume"`: `Bool` Defines whether to consume the item or not | `Default(false)`
+* `"/output"`: `Array` Defines paramaters for the crafting output
 	* `"/output/*/name"`: `String` The item name to give
 	* `"/output/*/count"`: `String` The amount to give
 	* OR `"/output/*/pool"`: `String` Defines the pool to generate
-	* `"/output/*/level"`:
-* `"/delay"`: `Int` Time for the item to craft times the dt must be an integer
-* `"/shaped"`: Only runs in the order given instead of shapless
+	* `"/output/*/level"`: `Int` The pool level to generate | `Default(0)`
+* `"/delay"`: `Int` Time for the item to craft times the dt must be an integer | `Default(0)`
+* `"/shaped"`: `Bool` Only runs in the order given instead of shapless | `Default(false)`
 ```
 [{
 	"input":[
@@ -80,3 +81,25 @@ All of that easly used by people who don't know lua or complex JSON.
 	"durabilityPerUse":`Int`
 ...}
 ```
+# Using functions in your lua file
+Use `require /Path` to define plug into the functions of each lua file
+
+---
+
+## ZekromsContainerUtil.lua
+### Zcontainer.consumeAt(`item descriptor` item , `Array of 2 Int` range)
+Consumes the given `item` within the `range` given.  Returns `true` if successful and `false` otherwise.
+
+### Zcontainer.putAt(`item descriptor` item, `Array of 2 Int` range)
+Trys to insert the `item` within the given `range` returns the `item descriptor` of the overflow or `true` if there is no overflow.
+
+## ZekromsItemUtil.lua
+### Zitem.damage(`item descriptor` item)
+Damages the `item` and removes it if the durabilityHit is grater than or equal to the durability.  Returns `false` if it fails, and `true` otherwise.  Add `item.damage` to change the factor just like in the Crafting config at `"/input/*/damage"`
+
+## ZekromsUtil.lua
+### Zutil.sbName()
+Returns the `item name` or `object name` as well as the `object ID` for loging purposes.
+
+### Zutil.deepcopy(`Table or Object`)
+Returns a copy of the `Object` or `Table` based off of http://lua-users.org/wiki/CopyTable

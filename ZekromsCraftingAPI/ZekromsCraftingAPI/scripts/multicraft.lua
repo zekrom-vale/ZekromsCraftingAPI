@@ -7,6 +7,7 @@ function init()
 	self.output=config.getParameter("multicraftAPI.output", {1, size})
 	self.recipes=root.assetJson(config.getParameter("multicraftAPI.recipefile"),{})
 	self.clockMax=math.floor(config.getParameter("multicraftAPI.clockMax",10000))
+	self.level=config.getParameter("multicraftAPI.level", 1)
 	self.init=true
 end
 
@@ -63,7 +64,11 @@ function verifyIn()
 		return key-1
 	end
 	for key,value in pairs(self.recipes) do
-		if value.input==nil or value.output==nil then
+		if (value.level or 1)>self.level then 
+			table.remove(self.recipes, key)
+			key=key-1
+			goto testEnd
+		elseif value.input==nil or value.output==nil then
 			Zutil.API(); sb.logWarn("Input/output missing for: "..Zutil.sbName())
 			key=act(value,key)
 			goto testEnd

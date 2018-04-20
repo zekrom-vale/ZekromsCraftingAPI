@@ -8,7 +8,7 @@
 * Define item alternative (via the `names` system)
 * Dellays
 * Checks for errors and trys to compensate for them (*Check your log!*)
-* Automatic processing *(On press may not be posible)*
+* Automatic processing *(On press may not be posible, sorry)*
 #### All of that easily used by people who don't know lua or complex JSON.
 
 # How to set up
@@ -31,6 +31,7 @@
 * `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
 * `"/multicraftAPI/drop"`: `"all" or Number` Decimal of **overflow droped** when broken (Positive numbers round up negative numbers round down) | `Default("all")`
 * `"/multicraftAPI/killStorage"`: `Bool` Defines that the **storage overflow** should be **killed** | `Default(false)`
+* `"/multicraftAPI/level"`: `Int` Defines the crafting object `level` | `Default(1)`
 ```
 {...
 "scripts":["/scripts/multicraft.lua"],
@@ -41,6 +42,7 @@
 	"recipefile":`/Path`
 	<,"drop":`"all" or Number`>
 	<,"killStorage":`Bool`>
+	<,"level":`Int`>
 }
 ...}
 ```
@@ -50,17 +52,18 @@
 * `/Unique Identifier`: `String` Defines the **ID** for the recipe (To compensate for the lacking JSON-patch system)
 * `"/input"`: `Array` Defines **paramaters** for the crafting `input`
 	* `"/input/*/name"`: `String` The `item name` to check for
-	* `"/input/*/count"`: `Int` The **amount** to check for
-	* `"/input/*/names"`: `Array of String` Defines the posible `items` to use
-	* `"/input/*/damage"`: `Number` How mutch to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
-	* `"/input/*/consume"`: `Bool` Defines whether to **consume the item** or not | `Default(false)`
+		* `"/input/*/count"`: `Int` The **amount** to check for
+		* `"/input/*/names"`: `Array of String` Defines the posible `items` to use
+		* `"/input/*/damage"`: `Number` How mutch to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
+		* `"/input/*/consume"`: `Bool` Defines whether to **consume the item** or not | `Default(false)`
 * `"/output"`: `Array` Defines **paramaters** for the crafting `output`
 	* `"/output/*/name"`: `String` The `item name` to give
-	* `"/output/*/count"`: `String` The **amount** to give
-	* OR `"/output/*/pool"`: `String` Defines the `pool` to generate
-	* `"/output/*/level"`: `Int` The `pool level` to generate | `Default(0)`
+		* `"/output/*/count"`: `String` The **amount** to give
+	* `"/output/*/pool"`: `String` Defines the `pool` to generate
+		* `"/output/*/level"`: `Int` The `pool level` to generate | `Default(0)`
 * `"/delay"`: `Int` **Time** for the **item to craft** times the dt must be an integer | `Default(0)`
 * `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
+* `"/level"`: `Int` Defines the minumum crafting `level` required to craft | `Default(1)`
 #### Using an object (Recommended)
 ```
 {
@@ -75,6 +78,7 @@
 	]
 	<,"delay":`Int`>
 	<,"shaped":`Bool`>
+	<,"level":`Int`>
 }...}
 ```
 ---
@@ -91,12 +95,13 @@
 	]
 	<,"delay":`Int`>
 	<,"shaped":`Bool`>
+	<,"level":`Int`>
 }...]
 ```
 ## Item config for damage (Standard starbound config)
 
 * `"/durability"`: `Int` The amount of `durability` an item has
-* `"/durabilityPerUse"`: `Int` How much `durability` to use **per use or craft** (Will consume item and will not jam with not enough durability)
+	* `"/durabilityPerUse"`: `Int` How much `durability` to use **per use or craft** (Will consume item and will not jam with not enough durability)
 ```
 {...
 	"durability":`Int`,

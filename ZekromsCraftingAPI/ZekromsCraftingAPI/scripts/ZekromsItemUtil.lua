@@ -10,7 +10,8 @@ Zitem={}
 	end
 end]]
 
-function Zitem.damage(item)
+function Zitem.damage(item,range)
+	range=range or self.input
 	if item.names~=nil and item.name==nil then	return	end
 	local id=entity.id()
 	local config=root.itemConfig(item.name).config
@@ -19,7 +20,7 @@ function Zitem.damage(item)
 	else
 		local damage=math.floor(-item.damage*config.durabilityPerUse)
 	end
-	for offset=self.input[1],self.input[2] do
+	for offset=range[1],range[2] do
 		local stack=world.containerItems(id)[offset]
 		if root.itemDescriptorsMatch(stack, item) then
 			stack.parameters.durabilityHit=(stack.parameters.durabilityHit or 0)+(damage or 1)

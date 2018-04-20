@@ -24,3 +24,7 @@ end
 function Zutil.API()
 	sb.logInfo("---  API mod: 'ZekromsMulticraftAPI'  ---")
 end
+
+function Zutil.swap2(array)
+	return {array[2],array[1]}
+end

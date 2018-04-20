@@ -2,44 +2,46 @@ require "/scripts/ZekromsContainerUtil.lua"
 require "/scripts/ZekromsUtil.lua"
 require "/scripts/ZekromsItemUtil.lua"
 function init()
-	storage.clock= storage.clock or 0
-	self.input=config.getParameter("multicraftAPI.input", {1, size})
-	self.output=config.getParameter("multicraftAPI.output", {1, size})
-	self.recipes=root.assetJson(config.getParameter("multicraftAPI.recipefile"),{})
-	self.clockMax=math.floor(config.getParameter("multicraftAPI.clockMax",10000))
-	self.level=config.getParameter("multicraftAPI.level", 1)
-	self.init=true
+	storage.clock=storage.clock or 0
+	local array={1, world.containerSize(entity.id())}
+	self=config.getParameter("multicraftAPI")
+	self={
+		input=self.input or array,
+		output=self.output or array,
+		recipes=self.recipes or {},
+		clockMax=self.clockMax or 10000,
+		level=self.level or 1,
+		init=true,
+		killStorage=self.killStorage,
+		drop=self.drop
+	}
 end
 
 function verify()
-	local import=self
-	if #import.input>2 or #import.output>2 then
+	local self=self
+	if #self.input>2 or #self.output>2 then
 		Zutil.API()
 		sb.logInfo("Input/output array is not 2 elements for: "..Zutil.sbName()..".  Ignoring the other ones")
 	end
 	local size=world.containerSize(entity.id())
-	self.input={fixIO(import.input[1],size) or 1, fixIO(import.input[2],size) or size}
-	self.output={fixIO(import.output[1],size) or 1, fixIO(import.output[2],size) or size}
+	self.input={fixIO(self.input[1],size) or 1, fixIO(self.input[2],size) or size}
+	self.output={fixIO(self.output[1],size) or 1, fixIO(self.output[2],size) or size}
 	size=nil
 
-	if import.input[1]>import.input[2] then
-		local t=import.input[1]
-		self.input[1]=import.input[2]
-		self.input[2]=t
-		t=nil
+	local str="put values swapped, use [small, large] for: "
+	if self.input[1]>self.input[2] then
+		self.input=Zutil.swap2(self.input)
 		Zutil.API()
-		sb.logInfo("Input values swapped, please use [small, large] for: "..Zutil.sbName())
+		sb.logInfo("In"..str..Zutil.sbName())
 	end
-	if import.output[1]>import.output[2] then
-		local t=import.output[1]
-		self.output[1]=import.output[2]
-		self.output[2]=t
-		t=nil
+	if self.output[1]>self.output[2] then
+		self.output=Zutil.swap2(self.output)
 		Zutil.API()
-		sb.logInfo("Output values swapped, please use [small, large] for: "..Zutil.sbName())
+		sb.logInfo("Out"..str..Zutil.sbName())
 	end
+	str=nil
 	verifyIn()
-	if next(import.recipes)==nil then
+	if next(self.recipes)==nil then
 		Zutil.API()
 		sb.logError("No recipe file defined for: "..Zutil.sbName())
 	end
@@ -58,7 +60,8 @@ function fixIO(item,size)
 end
 
 function verifyIn()
-	local act=function(value,key)
+	local self=self
+	local function act(value,key)
 		sb.logInfo(sb.printJson(value,1))
 		table.remove(self.recipes, key)
 		return key-1
@@ -77,7 +80,7 @@ function verifyIn()
 			key=act(value,key)
 			goto testEnd
 		elseif #value.output>self.output[2]-self.output[1]+1 then
-			Zutil.API(); sb.logInfo("Output overflow in: "..Zutil.sbName())
+			Zutil.API(); sb.logInfo("Possible output overflow in: "..Zutil.sbName())
 			sb.logInfo(sb.printJson(value,1))
 		end
 		if value.delay~=nil and value.delay%1~=0 then
@@ -98,9 +101,10 @@ function verifyIn()
 end
 
 function update(dt)
+	local storage=storage
 	if self.init then
+		self.init=nil
 		verify()
-		self.init=false
 	end
 	storage.clock=(storage.clock+1)%self.clockMax
 	if storage.wait~=nil then
@@ -156,8 +160,7 @@ function consumeItems(items, prod, stack, delay)
 				if item.names~=nil then
 					for _,val in pairs(item.names) do
 						local obj= Zutil.deepcopy(item)
-						obj.names=nil
-						obj.name=val
+						obj.names,obj.name=nil,val
 						if root.itemDescriptorsMatch(stack[i], obj) then
 							counts=counts+stack[i].count
 							table.insert(item2, obj)
@@ -203,24 +206,25 @@ function delayKey(delay)
 end
 
 function die()
-	local poz=entity.position()
+	local storage=storage
+	local self.drop=self.drop
 	local function drop(poz)
 		for _,item in pairs(storage.overflow) do
 			world.spawnItem(item.name, poz, item.count)
 		end
 	end
-	if config.getParameter("multicraftAPI.killStorage") or (type(storage.wait)=="number" and storage.wait~=0) then
-		local drop=config.getParameter("multicraftAPI.drop", "all")
-		if drop=="none" or drop==0 then
+	local poz=entity.position()
+	if self.killStorage or (type(storage.wait)=="number" and storage.wait~=0) then
+		if self.drop=="none" or self.drop==0 then
 			return
-		elseif type(drop)=="number" then
-			if drop>0 then
+		elseif type(self.drop)=="number" then
+			if self.drop>0 then
 				for _,item in pairs(storage.overflow) do
-					world.spawnItem(item.name, poz, math.ceil(item.count*drop))
+					world.spawnItem(item.name, poz, math.ceil(item.count*self.drop))
 				end
 			else
 				for _,item in pairs(storage.overflow) do
-					world.spawnItem(item.name, poz, math.floor(item.count*-drop))
+					world.spawnItem(item.name, poz, math.floor(item.count*-self.drop))
 				end
 			end
 		else

@@ -1,4 +1,4 @@
-# Zekrom's Crafting API
+# Zekrom's Extended Crafting API
 ### An easy way to extend crafting features
 * Works with pools
 * Damaging items
@@ -25,13 +25,14 @@
 
 ## Object config
 * `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
-* `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the delta)
+* `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the scriptDelta)
 * `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting** | `Default([1, size])`
 * `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting** | `Default([1, size])`
 * `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
 * `"/multicraftAPI/drop"`: `"all" or Number` Decimal of **overflow droped** when broken (Positive numbers round up negative numbers round down) | `Default("all")`
 * `"/multicraftAPI/killStorage"`: `Bool` Defines that the **storage overflow** should be **killed** | `Default(false)`
 * `"/multicraftAPI/level"`: `Int` Defines the crafting object `level` | `Default(1)`
+* `"/multicraftAPI/clockMax"`: `Int` Defines where the clock wraps | `Default(10000)`
 ```
 {...
 "scripts":["/scripts/multicraft.lua"],
@@ -43,6 +44,7 @@
 	<,"drop":`"all" or Number`>
 	<,"killStorage":`Bool`>
 	<,"level":`Int`>
+	<,"clockMax": `Int`>
 }
 ...}
 ```
@@ -70,6 +72,7 @@
 `Unique Identifier`:{
 	"input":[
 		{"name":`String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>},
+		{},//Empty slot only for shaped
 		{"names":`Array of String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>}
 	],
 	"output":[
@@ -87,6 +90,7 @@
 [{
 	"input":[
 		{"name":`String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>},
+		{},//Empty slot only for shaped
 		{"names":`Array of String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>}
 	],
 	"output":[
@@ -110,7 +114,7 @@
 ```
 
 # Using functions in your lua file
-Use `require /Path` to define plug into the functions of each .lua file
+Use `require /Path` to plug into the functions of each .lua file
 
 ---
 
@@ -122,8 +126,8 @@ Consumes the given `item` within the `range` given.  Returns `true` if successfu
 Trys to insert the `item` within the given `range` returns the `item descriptor` of the overflow or `true` if there is no overflow.
 
 ## ZekromsItemUtil.lua
-### `bool` Zitem.damage(`item descriptor` item)
-Damages the `item` and removes it if the durabilityHit is grater than or equal to the durability.  Returns `false` if it fails, and `true` otherwise.  Add `item.damage` to change the factor just like in the Crafting config at `"/input/*/damage"`
+### `bool` Zitem.damage(`item descriptor` item [,`Array of Int` range])
+Damages the `item` and removes it if the durabilityHit is grater than or equal to the durability in the given range or `self.input`.  Returns `false` if it fails, and `true` otherwise.  Add `item.damage` to change the factor just like in the Crafting config at `"/input/*/damage"`
 
 ## ZekromsUtil.lua
 ### `String` Zutil.sbName()

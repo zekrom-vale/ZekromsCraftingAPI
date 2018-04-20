@@ -8,8 +8,7 @@ function Zcontainer.tryAdd(items)
 end
 
 function Zcontainer.addItems(items)
-	local id=entity.id()
-	local arr={}
+	local id,arr=entity.id(),{}
 	for _,item in pairs(items) do
 		local t=Zcontainer.putAt(item, self.output)
 		if type(t)=="table" then	table.insert(arr, t)	end
@@ -34,25 +33,27 @@ end
 
 function Zcontainer.consumeAt(item, range)
 	if item.name==nil and item.names~=nil then	return	end
-	local stack=world.containerItems(entity.id())
+	local id=entity.id()
+	local stack=world.containerItems(id)
 	for o=range[1],range[2] do
 		if stack[o]~=nil and root.itemDescriptorsMatch(stack[o],item) then
 			if stack[o].count>=item.count then
-				world.containerConsumeAt(entity.id(), o-1, item.count)
+				world.containerConsumeAt(id, o-1, item.count)
 				return true
 			end
 			item.count=item.count-stack[o].count
-			world.containerTakeAt(entity.id(), o)
+			world.containerTakeAt(id, o)
 		end
 	end
 	return false
 end
 
 function Zcontainer.putAt(item, range)
-	local stack=world.containerItems(entity.id())
+	local id=entity.id()
+	local stack=world.containerItems(id)
 	for o=range[1],range[2] do
 		if stack[o]==nil or root.itemDescriptorsMatch(stack[o],item) then
-			item=world.containerPutItemsAt(entity.id(), item, o-1)
+			item=world.containerPutItemsAt(id, item, o-1)
 			if item==nil or next(item)==nil or item.count<=0 then
 				return true
 			end

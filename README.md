@@ -1,4 +1,4 @@
-# Zekrom's Extended Crafting API
+# Zekrom's Extended Crafting API (2 Part)
 ### An easy way to extend crafting features
 * Works with pools
 * Damaging items
@@ -8,8 +8,39 @@
 * Define item alternative (via the `names` system)
 * Dellays
 * Checks for errors and trys to compensate for them (*Check your log!*)
-* Automatic processing *(On press may not be posible, sorry)*
+* Automatic processing or click to craft
+* Pull crafting script that works like the Mincraft crafting table
 #### All of that easily used by people who don't know lua or complex JSON.
+
+# Index
+Links will come
+## FAQ
+## How to set up
+### Key
+### Multicraft: The standard extended crafting
+#### Object config
+#### Crafting config
+#### Setting up trigger or modes for crafting to your interface config (Click to craft)
+#### Item config for damage (Standard starbound config)
+### PullCraft: Craft by pulling items
+#### Object config
+#### Crafting config
+## Using functions in your lua file
+### ZekromsContainerUtil.lua
+### ZekromsItemUtil.lua
+### ZekromsUtil.lua
+
+# FAQ
+* Q: I'm not a modder, do I need this?
+A: You only need this mod if another mod requires it.  Otherwise, it is no use to you.
+* Q: Can I use this in my mod?
+A: Yes, as long as you mention that this mod is required (As extended crafting will not work)
+* Q: Do I need to use `"require"` or `"includes"` to have this mod work?
+A: This mod works after intilization is done so, no `"require"` or `"includes"` is not necisary (I think)
+* Q: Can I use your code?
+A: It depends, what are you using it for?  (You can use the .lua functions that are listed below **AND** incdue my mod as a required mod)
+* Q: I found an issue, where do I report it?
+A: Go to the github issues section and post it there **if it is not already there!**  Also, include your starbound log **and** the mod(s) you are using and that use this mod.
 
 # How to set up
 ## Key
@@ -23,8 +54,8 @@
 * `Array`: A **list of values** surounded by `[]`
 * Note: The first container slot is `1`. **Not `0`!**  (`2` is `2`,... `n` is `n`)
 
-# Multicraft: The standard extended crafting
-## Object config
+## Multicraft: The standard extended crafting
+### Object config
 * `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
 * `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the scriptDelta)
 * `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting** | `Default([1, size])`
@@ -34,6 +65,7 @@
 * `"/multicraftAPI/killStorage"`: `Bool` Defines that the **storage overflow** should be **killed** | `Default(false)`
 * `"/multicraftAPI/level"`: `Int` Defines the crafting object `level` | `Default(1)`
 * `"/multicraftAPI/clockMax"`: `Int` Defines where the clock wraps | `Default(10000)`
+* `"/multicraftAPI/modeMax"`: `Int` Defines the amount of modes (1 to n)
 ```
 {...
 "scripts":["/scripts/multicraft.lua"],
@@ -46,12 +78,13 @@
 	<,"killStorage":`Bool`>
 	<,"level":`Int`>
 	<,"clockMax": `Int`>
+	<,"modeMax": `Int`>
 }
 ...}
 ```
 
-## Crafting config
-### Due to the way the script works you can use an array or object at the root `/`
+### Crafting config
+#### Due to the way the script works you can use an array or object at the root `/`
 * `/Unique Identifier`: `String` Defines the **ID** for the recipe (To compensate for the lacking JSON-patch system)
 * `"/input"`: `Array` Defines **paramaters** for the crafting `input`
 	* `"/input/*/name"`: `String` The `item name` to check for
@@ -67,7 +100,7 @@
 * `"/delay"`: `Int` **Time** for the **item to craft** times the dt must be an integer | `Default(0)`
 * `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
 * `"/level"`: `Int` Defines the minumum crafting `level` required to craft | `Default(1)`
-#### Using an object (Recommended)
+##### Using an object (Recommended)
 ```
 {
 `Unique Identifier`:{
@@ -86,7 +119,7 @@
 }...}
 ```
 ---
-#### Using an array
+##### Using an array
 ```
 [{
 	"input":[
@@ -103,10 +136,11 @@
 	<,"level":`Int`>
 }...]
 ```
-## Setting up trigger for crafting to your interface config (Click to craft)
-`"/gui/`yourButton`/callback"`: "trigger" Defines the function to run on interaction
-`"/scriptWidgetCallbacks/1"`: "trigger" Defines the functions that can be called
-`"/scripts/1"`: "/scripts/ZekTrigger.lua" Defines the script the functions are in
+### Setting up trigger or modes for crafting to your interface config (Click to craft)
+* `"/gui/`yourButton`/callback"`: "trigger" Defines that the button runs trigger() to start crafting
+* `"/gui/`yourButton2`/callback"`: "mode" Defines that the button runs mode() to switch modes
+* `"/scriptWidgetCallbacks"`: [<"trigger"><,"mode">] Defines the functions that can be called
+* `"/scripts/-"`: "/scripts/ZekTrigger.lua" Defines the script the functions are in
 ```
 {
 "gui":{
@@ -116,14 +150,19 @@
 		...
 		"callback":"trigger"
 	},
+	"yourButton2":{
+		"type":"button",
+		...
+		"callback":"mode"
+	},
 	...
 },
-"scriptWidgetCallbacks":["trigger"],
+"scriptWidgetCallbacks":[<"trigger"><,"mode">],
 "scripts":["/scripts/ZekTrigger.lua"]
 }
 ```
 
-## Item config for damage (Standard starbound config)
+### Item config for damage (Standard starbound config)
 
 * `"/durability"`: `Int` The amount of `durability` an item has
 	* `"/durabilityPerUse"`: `Int` How much `durability` to use **per use or craft** (Will consume item and will not jam with not enough durability)
@@ -135,14 +174,17 @@
 ```
 
 ---
-#PullCraft: Craft by pulling items
-## Object config
+## PullCraft: Craft by pulling items
+##### The config is very similar to the multicraft system, but is more limited
+##### Drops mismatched items in the output when working to fix a consumption issue
+### Object config
 * `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
 * `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the scriptDelta)
 * `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting** | `Default([1, size])`
 * `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting** | `Default([1, size])`
 * `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
 * `"/multicraftAPI/level"`: `Int` Defines the crafting object `level` | `Default(1)`
+* `"/multicraftAPI/modeMax"`: `Int` Defines the amount of modes (1 to n)
 ```
 {...
 "scripts":["/scripts/pullCraft.lua"],
@@ -152,12 +194,13 @@
 	"output":[`Int`,`Int`],
 	"recipefile":`/Path`
 	<,"level":`Int`>
+	<,"modeMax": `Int`>
 }
 ...}
 ```
 
-## Crafting config
-### Due to the way the script works you can use an array or object at the root `/`
+### Crafting config
+#### Due to the way the script works you can use an array or object at the root `/`
 * `/Unique Identifier`: `String` Defines the **ID** for the recipe (To compensate for the lacking JSON-patch system)
 * `"/input"`: `Array` Defines **paramaters** for the crafting `input`
 	* `"/input/*/name"`: `String` The `item name` to check for
@@ -185,6 +228,26 @@
 	<,"shaped":`Bool`>
 	<,"level":`Int`>
 }...}
+```
+
+### Setting up modes
+* `"/gui/`yourButton`/callback"`: "mode" Defines that the button runs mode() to switch modes
+* `"/scriptWidgetCallbacks"`: ["mode"] Defines the functions that can be called
+* `"/scripts/-"`: "/scripts/ZekTrigger.lua" Defines the script the functions are in
+```
+{
+"gui":{
+	...
+	"yourButton":{
+		"type":"button",
+		...
+		"callback":"mode"
+	},
+	...
+},
+"scriptWidgetCallbacks":["mode"],
+"scripts":["/scripts/ZekTrigger.lua"]
+}
 ```
 
 ---

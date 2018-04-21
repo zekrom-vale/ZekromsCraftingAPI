@@ -1,3 +1,4 @@
 function trigger()
-	world.callScriptedEntity(pane.containerEntityId(), "triggerReceive")
+	world.sendEntityMessage(pane.containerEntityId(), "triggerReceive")
+	--world.callScriptedEntity(pane.containerEntityId(), "triggerReceive")
 end

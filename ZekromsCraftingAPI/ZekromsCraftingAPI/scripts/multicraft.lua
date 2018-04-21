@@ -17,6 +17,9 @@ function init()
 		drop=self.drop,
 		trigger=getTrigger()
 	}
+	message.setHandler("triggerReceive", function(_, _, params)
+		storage.active=true
+	end)
 end
 
 function getTrigger()
@@ -55,9 +58,11 @@ function update(dt)
 			else
 				storage.overflow=consumeItems(value.input, value.output, stack, value.delay)
 			end
-			if storage.overflow~=false then	break	end
+			if storage.overflow~=false then	goto updateEnd	end
 		end
-	elseif self.trigger==true then
+		storage.active=false
+		::updateEnd::
+	else
 		storage.active=false
 	end
 end
@@ -167,8 +172,4 @@ function die()
 	else
 		drop(poz)
 	end
-end
-
-function triggerReceive()
-	storage.active=true
 end

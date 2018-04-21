@@ -83,7 +83,6 @@ end
 end]]
 
 function Zcontainer.occupied(range)
-	if storage.toConsume==nil then	return	end
 	local stacks=world.containerItems(entity.id())
 	for o=self.output[1],self.output[2] do
 		if stacks[o]~=nil then

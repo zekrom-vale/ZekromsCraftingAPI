@@ -16,21 +16,17 @@ function init()
 	}
 end
 
-function update()
-	local storage=storage
+function containerCallback()
 	if self.init then
 		self.init=nil
 		Zverify.verify()
 	end
-	if taken() then
+	dropNotEqual()
+	if taken() and storage.stuffed~=true then
 		consume()
 	end
-	if Zcontainer.occupied(self.output) then
-		return
-	end
-	for o=self.output[1],self.output[2] do
-		world.containerTakeAt(entity.id(), o-1)
-	end
+	local storage=storage
+	revereConsume()
 	local stack=world.containerItems(entity.id())
 	for _,value in pairs(self.recipes) do
 		local stop
@@ -44,13 +40,28 @@ function update()
 end
 
 function taken()
-	if storage.output==nil or next(storage.output)==nil then	return	end
+	if storage.output==nil or next(storage.output)==nil then	return false	end
 	local stacks=world.containerItems(entity.id())
 	local storage=storage
 	local i=1
 	for o=self.output[1],self.output[2] do
 		if not root.itemDescriptorsMatch(stacks[o], storage.output[i]) or storage.output[i].count>stacks[o].count then
 			return true
+		end
+		i=i+1
+	end
+	return false
+end
+
+function dropNotEqual()
+	if storage.output==nil or next(storage.output)==nil then	return	end
+	local stacks=world.containerItems(entity.id())
+	local storage=storage
+	local i=1
+	for o=self.output[1],self.output[2] do
+		if not root.itemDescriptorsMatch(stacks[o], storage.output[i]) and stacks[o]~=nil then
+			world.spawnItem(stacks[o].name, entity.position(), stacks[o].count)
+			world.containerTakeAt(entity.id(),o-1)
 		end
 		i=i+1
 	end
@@ -69,6 +80,7 @@ function consume()
 		end
 	end
 	storage.toConsume=nil
+	storage.output=nil
 end
 
 function checkShaped(items, prod, stacks)
@@ -94,6 +106,11 @@ function checkShaped(items, prod, stacks)
 	storage.toConsume=sb.jsonMerge(items,item2)
 	storage.output=prod
 	Zcontainer.addItems(prod)
+	if next(Zcontainer.addItems(prod))~=nil then
+		storage.stuffed=true
+	else
+		storage.stuffed=false
+	end
 	return true
 end
 
@@ -124,10 +141,22 @@ function check(items, prod, stack)
 	end
 	storage.toConsume=sb.jsonMerge(items,item2)
 	storage.output=prod
-	Zcontainer.addItems(prod)
+	if next(Zcontainer.addItems(prod))~=nil then
+		storage.stuffed=true
+	else
+		storage.stuffed=false
+	end
 	return true
 end
 
 function die()
-	--Remove the resultants
+	revereConsume()
+end
+
+function revereConsume()
+	if storage.output==nil then	return false	end
+	for _,item in pairs(storage.output) do
+		Zcontainer.consumeAt(item, self.output)
+	end
+	storage.output=nil
 end

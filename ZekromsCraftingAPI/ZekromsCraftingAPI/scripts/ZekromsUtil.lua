@@ -28,3 +28,12 @@ end
 function Zutil.swap2(array)
 	return {array[2],array[1]}
 end
+
+function Zutil.inTable(array,v)
+	for _,value in pairs(array) do
+		if value==v then
+			return true
+		end
+	end
+	return false
+end

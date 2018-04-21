@@ -2,6 +2,7 @@ require "/scripts/ZekromsContainerUtil.lua"
 require "/scripts/ZekromsUtil.lua"
 require "/scripts/ZekromsItemUtil.lua"
 require "/scripts/ZekromsVerify.lua"
+require "/scripts/ZekReceive.lua"
 function init()
 	local array={1, world.containerSize(entity.id())}
 	self=config.getParameter("multicraftAPI")
@@ -14,6 +15,8 @@ function init()
 		killStorage=self.killStorage,
 		drop=self.drop
 	}
+	local winConfig=Zreceive.get()
+	if winConfig=="mode" or winConfig=="both" then	Zreceive.mode()	end
 end
 
 function containerCallback()
@@ -29,13 +32,15 @@ function containerCallback()
 	revereConsume()
 	local stack=world.containerItems(entity.id())
 	for _,value in pairs(self.recipes) do
-		local stop
-		if value.shaped then
-			stop=checkShaped(value.input, value.output, stack)
-		else
-			stop=check(value.input, value.output, stack)
+		if value.mode==nil or value.mode==storage.mode then
+			local stop
+			if value.shaped then
+				stop=checkShaped(value.input, value.output, stack)
+			else
+				stop=check(value.input, value.output, stack)
+			end
+			if stop then	break	end
 		end
-		if stop then	break	end
 	end
 end
 

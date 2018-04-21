@@ -2,6 +2,7 @@ require "/scripts/ZekromsContainerUtil.lua"
 require "/scripts/ZekromsUtil.lua"
 require "/scripts/ZekromsItemUtil.lua"
 require "/scripts/ZekromsVerify.lua"
+require "/scripts/ZekReceive.lua"
 function init()
 	storage.clock=storage.clock or 0
 	local array={1, world.containerSize(entity.id())}
@@ -15,21 +16,12 @@ function init()
 		init=true,
 		killStorage=self.killStorage,
 		drop=self.drop,
-		trigger=getTrigger()
+		modeMax=self.modeMax
 	}
-	message.setHandler("triggerReceive", function(_, _, params)
-		storage.active=true
-	end)
-end
-
-function getTrigger()
-	sb.logInfo(sb.printJson(root.assetJson(config.getParameter("uiConfig")),1))
-	for _,value in pairs(root.assetJson(config.getParameter("uiConfig")).scripts) do
-		if value=="/scripts/ZekTrigger.lua" then
-			return true
-		end
-	end
-	return false
+	local winConfig=Zreceive.get()
+	if winConfig=="both" then	Zreceive.trigger(); Zreceive.mode()
+	elseif winConfig=="trigger" then	Zreceive.trigger()
+	elseif winConfig=="mode" then	Zreceive.mode()	end
 end
 
 function update(dt)
@@ -53,12 +45,14 @@ function update(dt)
 	if type(storage.overflow)~="table" then
 		local stack=world.containerItems(entity.id())
 		for _,value in pairs(self.recipes) do
-			if value.shaped then
-				storage.overflow=consumeItemsShaped(value.input, value.output, stack, value.delay)
-			else
-				storage.overflow=consumeItems(value.input, value.output, stack, value.delay)
+			if value.mode==nil or value.mode==storage.mode then
+				if value.shaped then
+					storage.overflow=consumeItemsShaped(value.input, value.output, stack, value.delay)
+				else
+					storage.overflow=consumeItems(value.input, value.output, stack, value.delay)
+				end
+				if storage.overflow~=false then	goto updateEnd	end
 			end
-			if storage.overflow~=false then	goto updateEnd	end
 		end
 		storage.active=false
 		::updateEnd::

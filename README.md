@@ -13,22 +13,23 @@
 #### All of that easily used by people who don't know lua or complex JSON.
 
 # Index
-Links will come
-## FAQ
-## How to set up
-### Key
-### Multicraft: The standard extended crafting
-#### Object config
-#### Crafting config
-#### Setting up trigger or modes for crafting to your interface config (Click to craft)
-#### Item config for damage (Standard starbound config)
-### PullCraft: Craft by pulling items
-#### Object config
-#### Crafting config
-## Using functions in your lua file
-### ZekromsContainerUtil.lua
-### ZekromsItemUtil.lua
-### ZekromsUtil.lua
+## [FAQ](#faq-1)
+## [How to set up](#how-to-set-up-1)
+### [Key](#key-1)
+### [Multicraft: The standard extended crafting](#multicraft-the-standard-extended-crafting-1)
+#### [Object config](#object-config-2)
+#### [Crafting config](#crafting-config-2)
+#### [Setting up trigger or modes for crafting to your interface config](#setting-up-trigger-or-modes-for-crafting-to-your-interface-config-click-to-craft-1)
+#### [Item config for damage (Standard starbound config)](#item-config-for-damage-standard-starbound-config-1)
+### [PullCraft: Craft by pulling items](#pullcraft-craft-by-pulling-items-1)
+#### [Object config](#object-config-3)
+#### [Crafting config](#crafting-config-3)
+#### [Setting up modes](#setting-up-modes)
+## [Using functions in your lua file](#using-functions-in-your-lua-file-1)
+### [ZekromsContainerUtil.lua](#zekromscontainerutillua-1)
+### [ZekromsItemUtil.lua](#zekromsitemutillua-1)
+### [ZekromsUtil.lua](#zekromsutillua-1)
+---
 
 # FAQ
 * Q: I'm not a modder, do I need this?

@@ -23,6 +23,7 @@
 * `Array`: A **list of values** surounded by `[]`
 * Note: The first container slot is `1`. **Not `0`!**  (`2` is `2`,... `n` is `n`)
 
+# Multicraft: The standard extended crafting
 ## Object config
 * `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
 * `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the scriptDelta)
@@ -102,6 +103,26 @@
 	<,"level":`Int`>
 }...]
 ```
+## Setting up trigger for crafting to your interface config (Click to craft)
+`"/gui/`yourButton`/callback"`: "trigger" Defines the function to run on interaction
+`"/scriptWidgetCallbacks/1"`: "trigger" Defines the functions that can be called
+`"/scripts/1"`: "/scripts/ZekTrigger.lua" Defines the script the functions are in
+```
+{
+"gui":{
+	...
+	"yourButton":{
+		"type":"button",
+		...
+		"callback":"trigger"
+	},
+	...
+},
+"scriptWidgetCallbacks":["trigger"],
+"scripts":["/scripts/ZekTrigger.lua"]
+}
+```
+
 ## Item config for damage (Standard starbound config)
 
 * `"/durability"`: `Int` The amount of `durability` an item has
@@ -113,10 +134,63 @@
 ...}
 ```
 
-# Using functions in your lua file
-Use `require /Path` to plug into the functions of each .lua file
+---
+#PullCraft: Craft by pulling items
+## Object config
+* `"/scripts"`: `/Path` Point to the **crafting script** (Can use [`/Path` <,`...`> ])
+* `"/scriptDelta"`: `Int` Defines how **often** the script(s) run (The clock step is the scriptDelta)
+* `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting** | `Default([1, size])`
+* `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting** | `Default([1, size])`
+* `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
+* `"/multicraftAPI/level"`: `Int` Defines the crafting object `level` | `Default(1)`
+```
+{...
+"scripts":["/scripts/pullCraft.lua"],
+"scriptDelta": `Int`,
+"multicraftAPI":{
+	"input":[`Int`,`Int`],
+	"output":[`Int`,`Int`],
+	"recipefile":`/Path`
+	<,"level":`Int`>
+}
+...}
+```
+
+## Crafting config
+### Due to the way the script works you can use an array or object at the root `/`
+* `/Unique Identifier`: `String` Defines the **ID** for the recipe (To compensate for the lacking JSON-patch system)
+* `"/input"`: `Array` Defines **paramaters** for the crafting `input`
+	* `"/input/*/name"`: `String` The `item name` to check for
+		* `"/input/*/count"`: `Int` The **amount** to check for
+		* `"/input/*/names"`: `Array of String` Defines the posible `items` to use
+		* `"/input/*/damage"`: `Number` How mutch to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
+		* `"/input/*/consume"`: `Bool` Defines whether to **consume the item** or not | `Default(false)`
+* `"/output"`: `Array` Defines **paramaters** for the crafting `output`
+	* `"/output/*/name"`: `String` The `item name` to give
+		* `"/output/*/count"`: `String` The **amount** to give
+* `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
+* `"/level"`: `Int` Defines the minumum crafting `level` required to craft | `Default(1)`
+#### Using an object (Recommended)
+```
+{
+`Unique Identifier`:{
+	"input":[
+		{"name":`String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>},
+		{},//Empty slot only for shaped
+		{"names":`Array of String`,"count":`Int` <,"damage":`Number`> <,"consume":`Bool`>}
+	],
+	"output":[
+		{"name":`String`,"count":`Int`}
+	]
+	<,"shaped":`Bool`>
+	<,"level":`Int`>
+}...}
+```
 
 ---
+
+# Using functions in your lua file
+Use `require /Path` to plug into the functions of each .lua file
 
 ## ZekromsContainerUtil.lua
 ### `bool` Zcontainer.consumeAt(`item descriptor` item , `Array of 2 Int` range)

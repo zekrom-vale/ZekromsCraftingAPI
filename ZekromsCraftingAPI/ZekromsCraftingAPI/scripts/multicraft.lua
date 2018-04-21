@@ -14,8 +14,19 @@ function init()
 		level=self.level or 1,
 		init=true,
 		killStorage=self.killStorage,
-		drop=self.drop
+		drop=self.drop,
+		trigger=getTrigger()
 	}
+end
+
+function getTrigger()
+	sb.logInfo(sb.printJson(root.assetJson(config.getParameter("uiConfig")),1))
+	for _,value in pairs(root.assetJson(config.getParameter("uiConfig")).scripts) do
+		if value=="/scripts/ZekTrigger.lua" then
+			return true
+		end
+	end
+	return false
 end
 
 function update(dt)
@@ -23,6 +34,9 @@ function update(dt)
 	if self.init then
 		self.init=nil
 		Zverify.verify()
+	end
+	if self.trigger==true and storage.active~=true then
+		return
 	end
 	storage.clock=(storage.clock+1)%self.clockMax
 	if storage.wait~=nil then
@@ -43,6 +57,8 @@ function update(dt)
 			end
 			if storage.overflow~=false then	break	end
 		end
+	elseif self.trigger==true then
+		storage.active=false
 	end
 end
 
@@ -151,4 +167,8 @@ function die()
 	else
 		drop(poz)
 	end
+end
+
+function triggerReceive()
+	storage.active=true
 end

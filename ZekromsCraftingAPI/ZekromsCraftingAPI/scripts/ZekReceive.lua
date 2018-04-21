@@ -3,6 +3,7 @@ function Zreceive.trigger()
 	message.setHandler("trigger", function(_, _, params)
 		storage.active=true
 	end)
+	self.trigger=true
 end
 
 function Zreceive.mode()

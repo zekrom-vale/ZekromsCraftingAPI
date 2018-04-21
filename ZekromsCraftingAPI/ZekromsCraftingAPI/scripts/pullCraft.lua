@@ -32,7 +32,7 @@ function containerCallback()
 	revereConsume()
 	local stack=world.containerItems(entity.id())
 	for _,value in pairs(self.recipes) do
-		if value.mode==nil or value.mode==storage.mode then
+		if self.modeMax==nil or value.mode==nil or value.mode==storage.mode then
 			local stop
 			if value.shaped then
 				stop=checkShaped(value.input, value.output, stack)

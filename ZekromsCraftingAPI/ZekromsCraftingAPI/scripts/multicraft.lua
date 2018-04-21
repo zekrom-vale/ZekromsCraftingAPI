@@ -45,7 +45,7 @@ function update(dt)
 	if type(storage.overflow)~="table" then
 		local stack=world.containerItems(entity.id())
 		for _,value in pairs(self.recipes) do
-			if value.mode==nil or value.mode==storage.mode then
+			if self.modeMax==nil or value.mode==nil or value.mode==storage.mode then
 				if value.shaped then
 					storage.overflow=consumeItemsShaped(value.input, value.output, stack, value.delay)
 				else

@@ -51,11 +51,11 @@ function Zverify.verifyIn()
 		return key-1
 	end
 	for key,value in pairs(self.recipes) do
-		if (value.level or 1)>self.level then 
+		--[[if (value.level or 1)>self.level then 
 			table.remove(self.recipes, key)
 			key=key-1
 			goto testEnd
-		elseif value.input==nil or value.output==nil then
+		else]]if value.input==nil or value.output==nil then
 			Zutil.API(); sb.logWarn("Input/output missing for: "..Zutil.sbName())
 			key=act(value,key)
 			goto testEnd

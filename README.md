@@ -6,10 +6,11 @@
 * No consumption option
 * Shaped crafting
 * Define item alternative (via the `names` system)
-* Dellays
-* Checks for errors and trys to compensate for them (*Check your log!*)
+* Delay
+* Checks for errors and tries to compensate for them (*Check your log!*)
 * Automatic processing or click to craft
-* Pull crafting script that works like the Mincraft crafting table
+* Modes so you can use conflicting inputs (Ex wire extruder and plate press in one)
+* Pull crafting script that works like the Minecraft crafting table
 #### All of that easily used by people who don't know lua or complex JSON.
 
 # Index
@@ -19,7 +20,7 @@
 ### [Multicraft: The standard extended crafting](#multicraft-the-standard-extended-crafting-1)
 #### [Object config](#object-config-2)
 #### [Crafting config](#crafting-config-2)
-#### [Setting up trigger or modes for crafting to your interface config](#setting-up-trigger-or-modes-for-crafting-to-your-interface-config-click-to-craft-1)
+#### [Setting up trigger or modes for crafting to your interface config](#setting-up-trigger-or-modes-for-crafting-to-your-interface-config-click-to-craft)
 #### [Item config for damage (Standard starbound config)](#item-config-for-damage-standard-starbound-config-1)
 ### [PullCraft: Craft by pulling items](#pullcraft-craft-by-pulling-items-1)
 #### [Object config](#object-config-3)
@@ -32,27 +33,38 @@
 ---
 
 # FAQ
-* Q: I'm not a modder, do I need this?
+* Q: Is there a steam version of this?
+
+A: Yes there will be after I finish cleaning stuff up.
+* Q: I'm not a moder, do I need this?
+
 A: You only need this mod if another mod requires it.  Otherwise, it is no use to you.
 * Q: Can I use this in my mod?
+
 A: Yes, as long as you mention that this mod is required (As extended crafting will not work)
 * Q: Do I need to use `"require"` or `"includes"` to have this mod work?
-A: This mod works after intilization is done so, no `"require"` or `"includes"` is not necisary (I think)
+
+A: This mod works after initialization is done so, no `"require"` or `"includes"` is not necisary (I think)
 * Q: Can I use your code?
-A: It depends, what are you using it for?  (You can use the .lua functions that are listed below **AND** incdue my mod as a required mod)
+
+A: It depends, what are you using it for?  (You can use the .lua functions that are listed below **AND** include my mod as a required mod)
 * Q: I found an issue, where do I report it?
+
 A: Go to the github issues section and post it there **if it is not already there!**  Also, include your starbound log **and** the mod(s) you are using and that use this mod.
+* Q: Can I distribute this mod?
+
+A: No, just link to this page or the steam page
 
 # How to set up
 ## Key
-* `< >`: Indicaes that it is **optional** (Used instead of `[ ]` as in JSON it's an array)
+* `< >`: Indicates that it is **optional** (Used instead of `[ ]` as in JSON it's an array)
 * `...`: Indicates that it **continues**
 * `/Path`: Defines the **path** from the **root** to the file
-* `File`: Defineds the **file name** (including extention)
+* `File`: Defines the **file name** (including extension)
 * `Bool`: Boolean `true` or `false`
 * `Int`: A real **whole number**
 * `Number`: Any **real number**
-* `Array`: A **list of values** surounded by `[]`
+* `Array`: A **list of values** surround by `[]`
 * Note: The first container slot is `1`. **Not `0`!**  (`2` is `2`,... `n` is `n`)
 
 ## Multicraft: The standard extended crafting
@@ -62,7 +74,7 @@ A: Go to the github issues section and post it there **if it is not already ther
 * `"/multicraftAPI/input"`: `Array of 2 Int` Specifies the **input for crafting** | `Default([1, size])`
 * `"/multicraftAPI/output"`: `Array of 2 Int` Specifies the **output for crafting** | `Default([1, size])`
 * `"/multicraftAPI/recipefile"`: `/Path` Points to the **recipe JSON file**
-* `"/multicraftAPI/drop"`: `"all" or Number` Decimal of **overflow droped** when broken (Positive numbers round up negative numbers round down) | `Default("all")`
+* `"/multicraftAPI/drop"`: `"all" or Number` Decimal of **overflow dropped** when broken (Positive numbers round up negative numbers round down) | `Default("all")`
 * `"/multicraftAPI/killStorage"`: `Bool` Defines that the **storage overflow** should be **killed** | `Default(false)`
 * `"/multicraftAPI/level"`: `Int` Defines the crafting object `level` | `Default(1)`
 * `"/multicraftAPI/clockMax"`: `Int` Defines where the clock wraps | `Default(10000)`
@@ -90,8 +102,8 @@ A: Go to the github issues section and post it there **if it is not already ther
 * `"/input"`: `Array` Defines **paramaters** for the crafting `input`
 	* `"/input/*/name"`: `String` The `item name` to check for
 		* `"/input/*/count"`: `Int` The **amount** to check for
-		* `"/input/*/names"`: `Array of String` Defines the posible `items` to use
-		* `"/input/*/damage"`: `Number` How mutch to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
+		* `"/input/*/names"`: `Array of String` Defines the possible `items` to use
+		* `"/input/*/damage"`: `Number` How much to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
 		* `"/input/*/consume"`: `Bool` Defines whether to **consume the item** or not | `Default(false)`
 * `"/output"`: `Array` Defines **paramaters** for the crafting `output`
 	* `"/output/*/name"`: `String` The `item name` to give
@@ -99,8 +111,8 @@ A: Go to the github issues section and post it there **if it is not already ther
 	* `"/output/*/pool"`: `String` Defines the `pool` to generate
 		* `"/output/*/level"`: `Int` The `pool level` to generate | `Default(0)`
 * `"/delay"`: `Int` **Time** for the **item to craft** times the dt must be an integer | `Default(0)`
-* `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
-* `"/level"`: `Int` Defines the minumum crafting `level` required to craft | `Default(1)`
+* `"/shaped"`: `Bool` Only runs in the **order given** instead of shapeless | `Default(false)`
+* `"/level"`: `Int` Defines the minimum crafting `level` required to craft | `Default(1)`
 ##### Using an object (Recommended)
 ```
 {
@@ -206,14 +218,14 @@ A: Go to the github issues section and post it there **if it is not already ther
 * `"/input"`: `Array` Defines **paramaters** for the crafting `input`
 	* `"/input/*/name"`: `String` The `item name` to check for
 		* `"/input/*/count"`: `Int` The **amount** to check for
-		* `"/input/*/names"`: `Array of String` Defines the posible `items` to use
-		* `"/input/*/damage"`: `Number` How mutch to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
+		* `"/input/*/names"`: `Array of String` Defines the possible `items` to use
+		* `"/input/*/damage"`: `Number` How much to **damage the item** instead of consuming it (Positive numbers round up negative numbers round down) | `Default(null)`
 		* `"/input/*/consume"`: `Bool` Defines whether to **consume the item** or not | `Default(false)`
 * `"/output"`: `Array` Defines **paramaters** for the crafting `output`
 	* `"/output/*/name"`: `String` The `item name` to give
 		* `"/output/*/count"`: `String` The **amount** to give
-* `"/shaped"`: `Bool` Only runs in the **order given** instead of shapless | `Default(false)`
-* `"/level"`: `Int` Defines the minumum crafting `level` required to craft | `Default(1)`
+* `"/shaped"`: `Bool` Only runs in the **order given** instead of shapeless | `Default(false)`
+* `"/level"`: `Int` Defines the minimum crafting `level` required to craft | `Default(1)`
 #### Using an object (Recommended)
 ```
 {
@@ -269,7 +281,10 @@ Damages the `item` and removes it if the durabilityHit is grater than or equal t
 
 ## ZekromsUtil.lua
 ### `String` Zutil.sbName()
-Returns the `item name` or `object name` as well as the `object ID` for loging purposes.
+Returns the `item name` or `object name` as well as the `object ID` for logging purposes.
 
 ### `Table or Object` Zutil.deepcopy(`Table or Object`)
 Returns a copy of the `Object` or `Table` based off of http://lua-users.org/wiki/CopyTable
+
+# Notes
+* `nil` is lua's `null` or `undefined` value

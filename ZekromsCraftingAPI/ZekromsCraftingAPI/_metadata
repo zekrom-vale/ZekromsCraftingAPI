@@ -1,8 +1,11 @@
 {
   "author" : "zekrom_vale",
-  "description" : "Adds easy to use multicraft system that can output pools and multiple items.\nAdds an option for shaped recipes.\n\nSorry, only object crafting with no trigger.",
+  "description" : "Zekrom's Extended Crafting API (2 Part)\nAn easy way to extend crafting features\n* Works with pools\n* Damaging items\n* Define input and output (Allowing storage and crafting)\n* No consumption option\n* Shaped crafting\n* Define item alternative (via the `names` system)\n* Delay\n* Checks for errors and tries to compensate for them (Check your log!)\n* Automatic processing or click to craft\n* Modes so you can use conflicting inputs (Ex wire extruder and plate press in one)\n* Pull crafting script that works like the Minecraft crafting table\nAll of that easily used by people who don't know lua or complex JSON.\n\n[url=https://github.com/zekrom-vale/ZekromsCraftingAPI/tree/master#index]How to use this in your mod![/url]\n[url=https://github.com/zekrom-vale/ZekromsCraftingAPI/tree/master#multicraft-the-standard-extended-crafting-1]Multicraft: The standard extended crafting[/url]\n[url=https://github.com/zekrom-vale/ZekromsCraftingAPI/tree/master#pullcraft-craft-by-pulling-items-1]PullCraft: Craft by pulling items[/url]\n\nQ: I'm not a moder, do I need this?\nA: You only need this mod if another mod requires it.  Otherwise, it is no use to you.\n\nQ: Can I use this in my mod?\nA: Yes, as long as you mention that this mod is required (As extended crafting will not work)\n\nQ: Do I need to use `\"require\"` or `\"includes\"` to have this mod work?\nA: This mod works after initialization is done so, no `\"require\"` or `\"includes\"` is not necisary (I think)\n\nQ: Can I use your code?\nA: It depends, what are you using it for?  (You can use the .lua functions that are listed below **AND** include my mod as a required mod)\n\nQ: I found an issue, where do I report it?\nA: Go to the github issues section and post it there **if it is not already there!**  Also, include your starbound log **and** the mod(s) you are using and that use this mod.\n\nQ: Can I distribute this mod?\nA: No, just link to this page or the github page",
   "friendlyName" : "Zekrom's Crafting API",
   "friendlyname" : "Zekrom's Crafting API",
+  "link" : "steam://url/CommunityFilePage/1367325543",
   "name" : "ZekromsCraftingAPI",
+  "steamContentId" : "1367325543",
+  "tags" : "User Interface|In-Game Tools|Mechanics",
   "version" : "0.1"
 }

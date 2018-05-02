@@ -1,6 +1,6 @@
 function trigger()
-	world.sendEntityMessage(pane.containerEntityId(), "trigger")
+	world.sendEntityMessage(pane.containerEntityId(),"trigger")
 end
 function mode()
-	world.sendEntityMessage(pane.containerEntityId(), "mode")
+	world.sendEntityMessage(pane.containerEntityId(),"mode")
 end

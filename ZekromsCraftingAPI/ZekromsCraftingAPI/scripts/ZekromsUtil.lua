@@ -3,12 +3,12 @@ Zutil={}
 --http://lua-users.org/wiki/CopyTable
 function Zutil.deepcopy(orig)
 	local copy
-	if type(orig)=='table' then
+	if type(orig)=="table"then
 		copy={}
-		for orig_key,orig_value in next, orig, nil do
+		for orig_key,orig_value in next,orig,nil do
 			copy[Zutil.deepcopy(orig_key)]=Zutil.deepcopy(orig_value)
 		end
-		setmetatable(copy, Zutil.deepcopy(getmetatable(orig)))
+		setmetatable(copy,Zutil.deepcopy(getmetatable(orig)))
 	else
 		return orig
 	end
@@ -17,8 +17,8 @@ end
 
 function Zutil.sbName()
 	local name=config.getParameter("objectName")
-	if name==nil then	name=config.getParameter("itemName")	end
-	return "'"..(name or "null").."'.  id: '"..(entity.id() or "null").."'"
+	if not name then	name=config.getParameter("itemName")	end
+	return "'"..(name or"null").."'.  id: '"..(entity.id()or"null").."'"
 end
 
 function Zutil.API()
@@ -30,10 +30,8 @@ function Zutil.swap2(array)
 end
 
 function Zutil.inTable(array,v)
-	for _,value in pairs(array) do
-		if value==v then
-			return true
-		end
+	for _,value in pairs(array)do
+		if value==v then	return true	end
 	end
 	return false
 end
